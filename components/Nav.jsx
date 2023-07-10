@@ -8,17 +8,17 @@ import { useEffect, useState } from 'react';
 
 const Nav = () => {
 
-  const isUserLoggedIn = true;
+  const {data : session} = useSession()
   const [providers, setProviders] = useState(null);
   const [ToggleDropDown, setToggleDropDown] = useState(false)
 
   useEffect(()=>{
-    const setProviders = async () =>{
+    const setUpProviders = async () =>{
       const response = await getProviders()
       setProviders(response)
     }
 
-    setProviders()
+    setUpProviders()
     },[])
 
   return (
@@ -30,7 +30,7 @@ const Nav = () => {
 
       {/* desktop navigation */}
       <div className='sm:flex hidden'>
-        {isUserLoggedIn ? (<div className='flex gap-3 md:gap-5 '>
+        {session?.user ? (<div className='flex gap-3 md:gap-5 '>
           <Link href="/create-prompt" className='black_btn'>
             Create Post
           </Link>
@@ -50,7 +50,7 @@ const Nav = () => {
           </div>
         ): (
           <>
-          {providers && Object(providers).map(provider =>(
+          {providers && Object.values(providers).map(provider =>(
               <button
                 className='black_btn'
                 type='button'
@@ -67,7 +67,7 @@ const Nav = () => {
        {/* mobile navigation */}
        <div className='sm:hidden flex relative'>
           {
-            isUserLoggedIn? (
+            session?.user? (
               <div className="flex">
                 <Image
                 src="/assets/images/logo.svg"
@@ -111,7 +111,7 @@ const Nav = () => {
               
             ):(
           <>
-          {providers && Object(providers).map(provider =>(
+          {providers && Object.values(providers).map(provider =>(
               <button
                 className='black_btn'
                 type='button'
